@@ -22,12 +22,13 @@ Attribute VB_Customizable = False
 ' VARIABLES AND INITIALIZATION
 ' ===========================================
 
-Private list() As Variant
+Private list As Collection
 Private size As Long
 
 ''initialize the list
 Private Sub Class_Initialize()
     size = 0
+    Set list = New Collection
 End Sub
 
 ' ===========================================
@@ -36,12 +37,7 @@ End Sub
 
 ''get the size of the list
 Public Property Get Count() As Long
-    Count = size
-End Property
-
-''get an array from the list
-Public Property Get ToArray() As Variant
-    ToArray = list
+    Count = list.Count
 End Property
 
 ' ===========================================
@@ -50,7 +46,8 @@ End Property
 
 ''adds an item to the end of the list
 Public Sub Add(Item As Variant)
-    Insert size, Item
+    list.Add Item
+    size = list.Count
 End Sub
 
 ''get an item at a specified position
@@ -58,7 +55,11 @@ Public Function Item(Pos As Long) As Variant
     If (Pos < 0 Or Pos >= size) Then
         Err.Raise 9, "ArrayList.Item", "Out of bounds"
     Else
-        Item = list(Pos)
+        If (IsObject(list(Post + 1))) Then
+            Set Item = list(Pos + 1)
+        Else
+            Item = list(Pos + 1)
+        End If
     End If
 End Function
 
@@ -67,6 +68,20 @@ Public Function Clone() As Variant
     Dim tmp As ArrayList
     Set tmp = Me
     Set Clone = tmp
+End Function
+
+''get an array from the list
+Public Function ToArray() As Variant
+    Dim arr() As Variant
+    ReDim arr(size - 1)
+    
+    For i = 1 To size
+        If (IsObject(list(i))) Then
+            Set arr(i - 1) = list(i)
+        Else
+            arr(i - 1) = list(i)
+        End If
+    Next
 End Function
 
 ''test if something exists in the list
@@ -107,26 +122,14 @@ Public Sub Insert(Pos As Long, Item As Variant)
         Err.Raise 9, "ArrayList.Insert", "Out of bounds"
     End If
     
-    Dim newList(size) As Variant
-    
-    For i = 0 To UBound(list)
-        If (i < Pos) Then
-            newList(i) = list(i)
-        ElseIf (i > Pos) Then
-            newList(i) = list(i - 1)
-        Else ''(i = Pos)
-            newList(i) = Item
-        End If
-    Next
-    
-    list = newList
-    size = size + 1
+    list.Add Item, Pos + 1
+    size = list.Count
 End Sub
 
 ''clear the entire list
 Public Sub Clear()
-    Dim newList As ArrayList
-    Set Me = newList
+    Set list = New Collection
+    size = list.Count
 End Sub
 
 ''remove a specified entry via position
@@ -135,19 +138,8 @@ Public Sub RemoveAt(Pos As Long)
         Err.Raise 9, "ArrayList.RemoveAt", "Out of bounds"
     End If
     
-    size = size - 1
-    Dim newList() As Variant
-    ReDim newList(size - 1)
-    
-    For i = 0 To UBound(newList)
-        If (i >= Pos) Then
-            newList(i) = list(i + 1)
-        Else
-            newList(i) = list(i)
-        End If
-    Next
-    
-    list = newList
+    list.remove Pos + 1
+    size = list.Count
 End Sub
 
 ''remove a specified entry
@@ -173,11 +165,15 @@ End Sub
 
 ''reverse the list ordering
 Public Sub Reverse()
-    Dim newList() As Variant
-    ReDim newList(size - 1)
+    Dim newList As Collection
+    Set newList = New Collection
     
-    For i = 0 To UBound(list)
-        newList(size - 1 - i) = list(i)
+    For i = 1 To size
+        If (IsObject(list(i))) Then
+            Set newList(size - i + 1) = list(i)
+        Else
+            newList(size - i + 1) = list(i)
+        End If
     Next
 End Sub
 
@@ -186,10 +182,10 @@ Public Sub Sort()
     Dim tmp As Variant
     Dim j As Long
     
-    For i = 0 To UBound(list)
+    For i = 1 To size
         j = i
         
-        While (j > 0 And list(j - 1) > list(j))
+        While (j > 1 And list(j - 1) > list(j))
             Swap j, j - 1
             j = j - 1
         Wend
@@ -200,7 +196,21 @@ End Sub
 Private Sub Swap(Pos1 As Long, Pos2 As Long)
     Dim tmp As Variant
     
-    tmp = list(Pos1)
-    list(Pos1) = list(Pos2)
-    list(Pos2) = list(Pos1)
+    If (IsObject(Pos1)) Then
+        Set tmp = list(Pos1)
+    Else
+        tmp = list(Pos1)
+    End If
+    
+    If (IsObject(Pos2)) Then
+        Set list(Pos1) = list(Pos2)
+    Else
+        list(Pos1) = list(Pos2)
+    End If
+    
+    If (IsObject(Pos1)) Then
+        Set list(Pos2) = list(Pos1)
+    Else
+        list(Pos2) = list(Pos1)
+    End If
 End Sub

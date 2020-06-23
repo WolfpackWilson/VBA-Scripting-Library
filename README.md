@@ -1,4 +1,4 @@
-# VBA Scripting [Library]
+# VBA Scripting Library
 The goal of this repository is to recreate some of the scripting library included
 on Windows OS so that programs can work on Mac OS, too.
 
