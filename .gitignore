@@ -1,0 +1,9 @@
+# Excel
+Sheet*.cls
+ThisWorkbook.cls
+*~$*
+*.xlsm
+
+# VBA extract
+*.ini
+*.bin
