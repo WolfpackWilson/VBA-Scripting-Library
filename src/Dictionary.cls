@@ -80,22 +80,51 @@ End Property
 
 ''add a key-value pair to the dict
 Public Sub Add(Key As String, Value As Variant)
-
+    Dim Pair As New KeyValue
+    Pair.Key = Key
+    
+    If (IsObject(Value)) Then
+        Set Pair.Value = Value
+    Else
+        Pair.Value = Value
+    End If
+    
+    dict.Add Pair
+    size = dict.Count
 End Sub
 
 ''test if something exists in the dict
 Public Function Exists(Key As String) As Boolean
-
+    Dim flag As Boolean
+    flag = False
+    
+    For Each keystr In Keys
+        If (Key = keystr) Then
+            flag = True
+            Exit For
+        End If
+    Next
+    
+    Exits = flag
 End Function
 
 ''remove a key-value pair based on a key
 Public Sub Remove(Key As String)
-
+    For i = 1 To size
+        If (Key = dict(i).Key) Then
+            dict.Remove i
+            size = size - 1
+            Exit Sub
+        End If
+    Next
+    
+    Err.Raise 380, "Dictionary.Item", "Key not found"
 End Sub
 
 ''clear the dict
 Public Sub RemoveAll()
-
+    dict = New Collection
+    size = 0
 End Sub
 
 ''returns a collection of keys
@@ -109,3 +138,5 @@ Public Function Keys() As Collection
     
     Set Keys = coll
 End Function
+
+''omitting case sensitivity
