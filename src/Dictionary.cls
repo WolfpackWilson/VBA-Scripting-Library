@@ -62,11 +62,19 @@ End Property
 Public Property Set Item(Key As String, Value As Variant)
     For Each pair In dict
         If (pair.Key = Key) Then
-            If (IsObject(Value)) Then
-                Set pair.Value = Value
-            Else
-                pair.Value = Value
-            End If
+            Set Pair.Value = Value
+            Exit Property
+        End If
+    Next
+    
+    Err.Raise 380, "Dictionary.Item", "Key not found"
+End Property
+
+''let value
+Public Property Let Item(Key As String, Value As Variant)
+    For Each Pair In dict
+        If (Pair.Key = Key) Then
+            Pair.Value = Value
             Exit Property
         End If
     Next
@@ -80,6 +88,10 @@ End Property
 
 ''add a key-value pair to the dict
 Public Sub Add(Key As String, Value As Variant)
+    If (Exists(Key)) Then
+        Err.Raise 380, "Dictionary.Add", "Key exists"
+    End If
+    
     Dim Pair As New KeyValue
     Pair.Key = Key
     
@@ -89,7 +101,7 @@ Public Sub Add(Key As String, Value As Variant)
         Pair.Value = Value
     End If
     
-    dict.Add Pair
+    dict.Add Pair, Key:=CStr(Key)
     size = dict.Count
 End Sub
 
@@ -98,14 +110,14 @@ Public Function Exists(Key As String) As Boolean
     Dim flag As Boolean
     flag = False
     
-    For Each keystr In Keys
-        If (Key = keystr) Then
+    For Each Pair In dict
+        If (Key = Pair.Key) Then
             flag = True
             Exit For
         End If
     Next
     
-    Exits = flag
+    Exists = flag
 End Function
 
 ''remove a key-value pair based on a key
@@ -118,12 +130,12 @@ Public Sub Remove(Key As String)
         End If
     Next
     
-    Err.Raise 380, "Dictionary.Item", "Key not found"
+    Err.Raise 380, "Dictionary.Remove", "Key not found"
 End Sub
 
 ''clear the dict
 Public Sub RemoveAll()
-    dict = New Collection
+    Set dict = New Collection
     size = 0
 End Sub
 
