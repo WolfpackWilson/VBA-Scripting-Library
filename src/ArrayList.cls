@@ -13,6 +13,7 @@ Attribute VB_Customizable = False
 
 ''=======================================================
 '' Class:       ArrayList
+'' Version:     0.1.0
 '' Changes----------------------------------------------
 '' Date         Programmer      Change
 '' 6/23/2020    TheEric960      Written
@@ -73,6 +74,12 @@ End Function
 ''get an array from the list
 Public Function ToArray() As Variant
     Dim arr() As Variant
+
+    If (size = 0) Then
+        ToArray = arr
+        Exit Function
+    End If
+    
     ReDim arr(size - 1)
     
     For i = 1 To size
@@ -82,6 +89,8 @@ Public Function ToArray() As Variant
             arr(i - 1) = list(i)
         End If
     Next
+    
+    ToArray = arr
 End Function
 
 ''test if something exists in the list
@@ -90,9 +99,18 @@ Public Function Contains(Item As Variant) As Variant
     flag = False
     
     For Each listItem In list
-        If (Item = listItem) Then
-            flag = True
-            Exit For
+        If (IsObject(Item) And IsObject(listItem)) Then
+            If (Item Is listItem) Then
+                flag = True
+                Exit For
+            End If
+        ElseIf (IsObject(Item) Or IsObject(listItem)) Then
+            ''can't compare; continue
+        Else
+            If (Item = listItem) Then
+                flag = True
+                Exit For
+            End If
         End If
     Next
     
@@ -105,9 +123,18 @@ Public Function IndexOf(Item As Variant) As Variant
     Pos = 0
     
     For Each listItem In list
-        If (Item = listItem) Then
-            IndexOf = Pos
-            Exit Function
+        If (IsObject(Item) And IsObject(listItem)) Then
+            If (Item Is listItem) Then
+                IndexOf = Pos
+                Exit Function
+            End If
+        ElseIf (IsObject(Item) Or IsObject(listItem)) Then
+            ''can't compare; continue
+        Else
+            If (Item = listItem) Then
+                IndexOf = Pos
+                Exit Function
+            End If
         End If
         
         Pos = Pos + 1
@@ -117,12 +144,16 @@ Public Function IndexOf(Item As Variant) As Variant
 End Function
 
 ''add and item at a position
-Public Sub Insert(Pos As Long, Item As Variant)
+Public Sub Insert(Item As Variant, Pos As Long)
     If (Pos < 0 Or Pos > size) Then
         Err.Raise 9, "ArrayList.Insert", "Out of bounds"
     End If
     
-    list.Add Item, Pos + 1
+    If (Pos = 0) Then
+        list.Add Item, before:=Pos + 1
+    Else
+        list.Add Item, after:=Pos
+    End If
     size = list.Count
 End Sub
 
@@ -147,7 +178,7 @@ Public Sub remove(Item As Variant)
     RemoveAt IndexOf(Item)
 End Sub
 
-''remove a range
+''remove an inclusive range
 Public Sub RemoveRange(Pos1 As Long, Pos2 As Long)
     If (Pos1 < 0 Or Pos1 >= size Or Pos2 < 0 Or Pos2 >= size) Then
         Err.Raise 9, "ArrayList.RemoveRange", "Out of bounds"
@@ -169,48 +200,24 @@ Public Sub Reverse()
     Set newList = New Collection
     
     For i = 1 To size
-        If (IsObject(list(i))) Then
-            Set newList(size - i + 1) = list(i)
-        Else
-            newList(size - i + 1) = list(i)
-        End If
+        newList.Add list(size - i + 1)
     Next
+    
+    Set list = newList
 End Sub
 
-''sort the list [using insertion sort]
+''sort the list - does not support objects
 Public Sub Sort()
     Dim tmp As Variant
-    Dim j As Long
     
-    For i = 1 To size
-        j = i
-        
-        While (j > 1 And list(j - 1) > list(j))
-            Swap j, j - 1
-            j = j - 1
-        Wend
+    ''bubble sort
+    For i = 1 To size - 1
+        For j = i + 1 To size
+            If (list(i) > list(j)) Then
+                tmp = list(j)
+                list.Remove j
+                list.Add tmp, before:=i
+            End If
+        Next
     Next
-End Sub
-
-''swap two items in a list
-Private Sub Swap(Pos1 As Long, Pos2 As Long)
-    Dim tmp As Variant
-    
-    If (IsObject(Pos1)) Then
-        Set tmp = list(Pos1)
-    Else
-        tmp = list(Pos1)
-    End If
-    
-    If (IsObject(Pos2)) Then
-        Set list(Pos1) = list(Pos2)
-    Else
-        list(Pos1) = list(Pos2)
-    End If
-    
-    If (IsObject(Pos1)) Then
-        Set list(Pos2) = list(Pos1)
-    Else
-        list(Pos2) = list(Pos1)
-    End If
 End Sub
