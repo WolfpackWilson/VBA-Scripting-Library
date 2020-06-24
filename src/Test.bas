@@ -3,16 +3,20 @@ Attribute VB_Name = "Test"
 ''=======================================================
 '' Program:     Test
 '' Desc:        Test cases for scripting objects
-'' Version:     0.1.0
+'' Version:     0.2.0
 '' Changes----------------------------------------------
 '' Date         Programmer      Change
 '' 6/23/2020    TheEric960      Written
+'' 6/23/2020    TheEric960      Added Dictionary Class
 ''=======================================================
 
 ''main method
 Sub RunTests()
     Debug.Print vbCrLf + vbCrLf + "-----------------"
     TestArrayList
+    TestDictionary
+    Debug.Print "All tests passed!"
+    'MsgBox "All tests passed!"
 End Sub
 
 ''a series of ArrayList (AL) tests
@@ -72,4 +76,48 @@ Sub TestArrayList(Optional ByVal Cancel As Boolean = False)
     Debug.Assert (arrList.Count = 1)
     
     Debug.Print "ArrayList Passed"
+End Sub
+
+''a series of Dictionary (Dict) tests
+Sub TestDictionary(Optional ByVal Cancel As Boolean = False)
+    If (Cancel) Then
+        Exit Sub
+    End If
+    
+    Dim dict As New Dictionary
+    
+    ''add items and objects
+    For i = 0 To 8
+        dict.Add CStr(i), i + 1
+    Next
+    Debug.Assert (dict.Count = 9)
+    Debug.Assert (dict.Item("7") = 8)
+    
+    dict.Add "bug", Excel.Worksheets
+    Debug.Assert (dict.Count = 10)
+        
+    ''check the existance of a key
+    Debug.Assert (dict.Exists("3"))
+    Debug.Assert (dict.Exists("bug"))
+    Debug.Assert Not (dict.Exists("fly"))
+    
+    ''change the value of an item
+    dict.Item("bug") = 35
+    Debug.Assert (dict.Item("bug") = 35)
+    
+    ''see keys
+    Dim coll As New Collection
+    Set coll = dict.Keys
+    
+    ''remove items
+    dict.Remove "bug"
+    dict.Remove "3"
+    Debug.Assert (Not dict.Exists("bug"))
+    Debug.Assert (Not dict.Exists("3"))
+    Debug.Assert (dict.Count = 8)
+    
+    dict.RemoveAll
+    Debug.Assert (dict.Count = 0)
+    
+    Debug.Print "Dictionary Passed"
 End Sub
