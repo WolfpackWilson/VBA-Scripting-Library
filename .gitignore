@@ -7,3 +7,6 @@ ThisWorkbook.cls
 # VBA extract
 *.ini
 *.bin
+
+# Folders
+releases/*
