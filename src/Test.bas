@@ -13,6 +13,7 @@ Attribute VB_Name = "Test"
 Sub RunTests()
     Debug.Print vbCrLf + vbCrLf + "-----------------"
     TestArrayList
+    MsgBox "All tests passed!"
 End Sub
 
 ''a series of ArrayList (AL) tests
