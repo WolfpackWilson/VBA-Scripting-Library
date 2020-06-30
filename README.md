@@ -21,6 +21,10 @@ Right click on the project in the projectect explorer then choose import file. I
 ### Similar Documentation
 1. [ArrayList](https://excelmacromastery.com/vba-arraylist/)
 1. [Dictionary](https://excelmacromastery.com/vba-dictionary/)
+    - Notable differences:
+        - Use `dict.Item(item)` instead of `dict(item)` when adding, editing, or viewing values.
+        - Object keys are supported.
+        - There is no case sensitivity option.
 
 ## Terms of Service
 As defined in the [MIT License](https://github.com/TheEric960/VBA-Scripting-Library/blob/master/LICENSE):
