@@ -12,10 +12,11 @@ Attribute VB_TemplateDerived = False
 Attribute VB_Customizable = False
 ''=======================================================
 '' Class:       KeyValue
-'' Version:     0.2.0
+'' Version:     0.4.0
 '' Changes----------------------------------------------
 '' Date         Programmer      Change
 '' 6/23/2020    TheEric960      Written
+'' 6/30/2020    TheEric960      Expanded Scope
 ''=======================================================
 
 
@@ -23,7 +24,7 @@ Attribute VB_Customizable = False
 ' VARIABLES AND INITIALIZATION
 ' ===========================================
 
-Public Key As String
+Public Key As Variant
 Public Value As Variant
 
 ''initialize the class variables

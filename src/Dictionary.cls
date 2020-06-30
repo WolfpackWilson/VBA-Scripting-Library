@@ -13,10 +13,11 @@ Attribute VB_Customizable = False
 
 ''=======================================================
 '' Class:       Dictionary
-'' Version:     0.2.0
+'' Version:     0.4.0
 '' Changes----------------------------------------------
 '' Date         Programmer      Change
 '' 6/23/2020    TheEric960      Written
+'' 6/30/2020    TheEric960      Expanded Scope
 ''=======================================================
 
 
@@ -43,15 +44,28 @@ Public Property Get Count() As Long
 End Property
 
 ''get value from key
-Public Property Get Item(Key As String)
+Public Property Get Item(Key As Variant)
     For Each pair In dict
-        If (pair.Key = Key) Then
-            If (IsObject(pair.Value)) Then
-                Set Item = pair.Value
-            Else
-                Item = pair.Value
+        If (IsObject(Pair.Key) Or IsObject(Key)) Then
+            If (IsObject(Pair.Key) And IsObject(Key)) Then
+                If (Pair.Key Is Key) Then
+                    If (IsObject(Pair.Value)) Then
+                        Set Item = Pair.Value
+                    Else
+                        Item = Pair.Value
+                    End If
+                    Exit Property
+                End If
             End If
-            Exit Property
+        Else
+            If (Pair.Key = Key) Then
+                If (IsObject(Pair.Value)) Then
+                    Set Item = Pair.Value
+                Else
+                    Item = Pair.Value
+                End If
+                Exit Property
+            End If
         End If
     Next
     
@@ -59,27 +73,45 @@ Public Property Get Item(Key As String)
 End Property
 
 ''set value
-Public Property Set Item(Key As String, Value As Variant)
+Public Property Set Item(Key As Variant, Value As Variant)
     For Each pair In dict
-        If (pair.Key = Key) Then
-            Set Pair.Value = Value
-            Exit Property
+        If (IsObject(Pair.Key) Or IsObject(Key)) Then
+            If (IsObject(Pair.Key) And IsObject(Key)) Then
+                If (Pair.Key Is Key) Then
+                    Set Pair.Value = Value
+                    Exit Property
+                End If
+            End If
+        Else
+            If (Pair.Key = Key) Then
+                Set Pair.Value = Value
+                Exit Property
+            End If
         End If
     Next
     
-    Err.Raise 380, "Dictionary.Item", "Key not found"
+    Add Key, Value
 End Property
 
 ''let value
-Public Property Let Item(Key As String, Value As Variant)
+Public Property Let Item(Key As Variant, Value As Variant)
     For Each Pair In dict
-        If (Pair.Key = Key) Then
-            Pair.Value = Value
-            Exit Property
+        If (IsObject(Pair.Key) Or IsObject(Key)) Then
+            If (IsObject(Pair.Key) And IsObject(Key)) Then
+                If (Pair.Key Is Key) Then
+                    Pair.Value = Value
+                    Exit Property
+                End If
+            End If
+        Else
+            If (Pair.Key = Key) Then
+                Pair.Value = Value
+                Exit Property
+            End If
         End If
     Next
     
-    Err.Raise 380, "Dictionary.Item", "Key not found"
+    Add Key, Value
 End Property
 
 ' ===========================================
@@ -87,13 +119,17 @@ End Property
 ' ===========================================
 
 ''add a key-value pair to the dict
-Public Sub Add(Key As String, Value As Variant)
+Public Sub Add(Key As Variant, Value As Variant)
     If (Exists(Key)) Then
         Err.Raise 380, "Dictionary.Add", "Key exists"
     End If
     
     Dim Pair As New KeyValue
-    Pair.Key = Key
+    If (IsObject(Key)) Then
+        Set Pair.Key = Key
+    Else
+        Pair.Key = Key
+    End If
     
     If (IsObject(Value)) Then
         Set Pair.Value = Value
@@ -101,19 +137,28 @@ Public Sub Add(Key As String, Value As Variant)
         Pair.Value = Value
     End If
     
-    dict.Add Pair, Key:=CStr(Key)
+    dict.Add Pair
     size = dict.Count
 End Sub
 
 ''test if something exists in the dict
-Public Function Exists(Key As String) As Boolean
+Public Function Exists(Key As Variant) As Boolean
     Dim flag As Boolean
     flag = False
     
     For Each Pair In dict
-        If (Key = Pair.Key) Then
-            flag = True
-            Exit For
+        If (IsObject(Pair.Key) Or IsObject(Key)) Then
+            If (IsObject(Pair.Key) And IsObject(Key)) Then
+                If (Key Is Pair.Key) Then
+                    flag = True
+                    Exit For
+                End If
+            End If
+        Else
+            If (Key = Pair.Key) Then
+                flag = True
+                Exit For
+            End If
         End If
     Next
     
@@ -121,12 +166,22 @@ Public Function Exists(Key As String) As Boolean
 End Function
 
 ''remove a key-value pair based on a key
-Public Sub Remove(Key As String)
+Public Sub Remove(Key As Variant)
     For i = 1 To size
-        If (Key = dict(i).Key) Then
-            dict.Remove i
-            size = size - 1
-            Exit Sub
+        If (IsObject(Key) Or IsObject(dict(i).Key)) Then
+            If (IsObject(Key) And IsObject(dict(i).Key)) Then
+                If (Key Is dict(i).Key) Then
+                    dict.Remove i
+                    size = size - 1
+                    Exit Sub
+                End If
+            End If
+        Else
+            If (Key = dict(i).Key) Then
+                dict.Remove i
+                size = size - 1
+                Exit Sub
+            End If
         End If
     Next
     
