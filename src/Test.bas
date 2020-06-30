@@ -3,11 +3,12 @@ Attribute VB_Name = "Test"
 ''=======================================================
 '' Program:     Test
 '' Desc:        Test cases for scripting objects
-'' Version:     0.2.0
+'' Version:     0.4.0
 '' Changes----------------------------------------------
 '' Date         Programmer      Change
 '' 6/23/2020    TheEric960      Written
 '' 6/23/2020    TheEric960      Added Dictionary Class
+'' 6/30/2020    TheEric960      Expanded Dict. key support
 ''=======================================================
 
 ''main method
@@ -115,6 +116,32 @@ Sub TestDictionary(Optional ByVal Cancel As Boolean = False)
     Debug.Assert (Not dict.Exists("bug"))
     Debug.Assert (Not dict.Exists("3"))
     Debug.Assert (dict.Count = 8)
+    
+    dict.RemoveAll
+    Debug.Assert (dict.Count = 0)
+    
+    ''----- begin testing objects -----
+    dict.Add coll, "this is a test"
+    Debug.Assert (dict.Item(coll) = "this is a test")
+    
+    dict.Item(coll) = "overwritten"
+    Debug.Assert (dict.Item(coll) = "overwritten")
+    Debug.Assert (dict.Count = 1)
+    
+    Dim coll2 As New Collection
+    coll2.Add "A Thing!"
+    
+    Set dict.Item(coll2) = coll
+    Debug.Assert (dict.Item(coll2) Is coll)
+    Debug.Assert (dict.Count = 2)
+    
+    Debug.Assert (dict.Exists(coll2))
+    
+    dict.Remove coll
+    Debug.Assert (Not dict.Exists(coll))
+    Debug.Assert (dict.Count = 1)
+    
+    Set coll = dict.Keys
     
     dict.RemoveAll
     Debug.Assert (dict.Count = 0)
