@@ -137,7 +137,7 @@ Public Sub Add(Key As Variant, Value As Variant)
         Pair.Value = Value
     End If
     
-    dict.Add Pair, Key:=Key
+    dict.Add Pair
     size = dict.Count
 End Sub
 
