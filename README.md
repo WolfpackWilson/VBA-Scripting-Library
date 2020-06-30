@@ -18,7 +18,7 @@ As such, anytime `CreateObject("Scripting.<object>")` is used, this error will a
 ## Installation and Use
 Right click on the project in the projectect explorer then choose import file. Import any necessary files into your project. From there, call the objects to use them (i.e. `Dim dict As New Dictionary`).
 
-### Documentation
+### Similar Documentation
 1. [ArrayList](https://excelmacromastery.com/vba-arraylist/)
 1. [Dictionary](https://excelmacromastery.com/vba-dictionary/)
 
