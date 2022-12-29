@@ -1,8 +1,8 @@
 # VBA Scripting Library
-[![GitHub release (latest by date)](https://img.shields.io/github/v/release/TheEric960/VBA-Scripting-Library)](https://github.com/TheEric960/VBA-Scripting-Library/releases)
-[![GitHub All Releases](https://img.shields.io/github/downloads/TheEric960/VBA-Scripting-Library/total)](https://github.com/TheEric960/VBA-Scripting-Library/releases/latest)
-[![GitHub issues](https://img.shields.io/github/issues/TheEric960/VBA-Scripting-Library)](https://github.com/TheEric960/VBA-Scripting-Library/issues)
-[![GitHub](https://img.shields.io/github/license/TheEric960/VBA-Scripting-Library)](https://github.com/TheEric960/VBA-Scripting-Library/blob/master/LICENSE)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/WolfpackWilson/VBA-Scripting-Library)](https://github.com/WolfpackWilson/VBA-Scripting-Library/releases)
+[![GitHub All Releases](https://img.shields.io/github/downloads/WolfpackWilson/VBA-Scripting-Library/total)](https://github.com/WolfpackWilson/VBA-Scripting-Library/releases/latest)
+[![GitHub issues](https://img.shields.io/github/issues/WolfpackWilson/VBA-Scripting-Library)](https://github.com/WolfpackWilson/VBA-Scripting-Library/issues)
+[![GitHub](https://img.shields.io/github/license/WolfpackWilson/VBA-Scripting-Library)](https://github.com/WolfpackWilson/VBA-Scripting-Library/blob/master/LICENSE)
 
 The goal of this repository is to recreate some of the scripting library included
 on Windows OS so that programs can work on Mac OS, too.
